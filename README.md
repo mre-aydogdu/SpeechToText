@@ -4,22 +4,28 @@ This project is a modern GUI application for comparing audio transcription resul
 
 ## Features
 
-- Upload audio files (MP3, WAV)
-- Transcribe audio using Whisper
-- Transcribe audio using Vosk
-- Enhance audio using DeepFilterNet
-- Display transcription results in a user-friendly interface
+- **Upload Audio Files:** Users can upload audio files from their file system.
+- **Transcription:** Transcribe audio files using Whisper or Vosk.
+- **Enhancement:** Enhance audio quality using DeepFilterNet.
+- **Reset Path:** Reset the file path to upload a new file.
+
+## Requirements
+
+- Python 3.12
+- `customtkinter`
+- `tkinter`
+- `whisper-openai`
+- `vosk`
+- `deepfilternet`
 
 ## Installation
 
-### Prerequisites
-
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/yourusername/speech-transcription-enhancement.git
+   cd speech-transcription-enhancement
 - Python 3.12 or higher
 - `pip` package manager
-
-## Example
-
-![resim_2024-05-21_114624617](https://github.com/mre-aydogdu/SpeechToText/assets/72506644/076253f3-bf7d-4045-8511-e3bd518c3a52)
 
 ### Required Libraries
 
@@ -27,3 +33,15 @@ Install the required libraries using the following command:
 
 ```bash
 pip(3) install customtkinter openai-whisper vosk
+```
+
+### Usage
+Run the application:
+
+```bash
+python main.py
+```
+## Example
+
+![resim_2024-05-21_114624617](https://github.com/mre-aydogdu/SpeechToText/assets/72506644/076253f3-bf7d-4045-8511-e3bd518c3a52)
+
