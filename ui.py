@@ -24,16 +24,27 @@ def create_ui(app):
 
     # Use CTkButton instead of tkinter Button
     button_whisper = CTkButton(master=app, text="Transcribe with Whisper", width=200, hover_color="red",
-                               command=lambda: WhisperTranscribe(entry_file_path), font=custom_font)
+                               command=lambda: WhisperTranscribe(entry_file_path, whisper_textbox), font=custom_font)
     button_whisper.place(relx=0.25, rely=0.4, anchor=CENTER)
 
     button_vosk = CTkButton(master=app, text="Transcribe with Vosk", width=200, hover_color="orange",
-                            command=lambda: VoskTranscribe(entry_file_path), font=custom_font)
+                            command=lambda: VoskTranscribe(entry_file_path, vosk_textbox), font=custom_font)
     button_vosk.place(relx=0.75, rely=0.4, anchor=CENTER)
 
     # Add a Reset button to clear the selected file and path
-    reset_button = CTkButton(master=app, image=cross_image, text='', width=30, fg_color="#1E201F", command=lambda: ResetPath(entry_file_path))
+    reset_button = CTkButton(master=app, image=cross_image, text='', width=30, fg_color="#1E201F",
+                             command=lambda: ResetPath(entry_file_path))
     reset_button.place(relx=0.635, rely=0.1, anchor=CENTER)
     button_enhance = CTkButton(master=app, text='Enhance', fg_color="purple",
                                command=lambda: Enhance(entry_file_path), font=custom_font)
     button_enhance.place(relx=0.5, rely=0.35, anchor=CENTER)
+
+    vosk_textbox = CTkTextbox(master=app, width=400, height=100, fg_color="#111111", border_width=0,
+                              text_color="white", font=("default", 20), state="normal")
+    vosk_textbox.place(relx=0.75, rely=0.6, anchor=CENTER)
+
+    whisper_textbox = CTkTextbox(master=app, width=400, height=100, fg_color="#111111", border_width=0,
+                                 text_color="white", font=("default", 20), state="normal")
+    whisper_textbox.place(relx=0.25, rely=0.6, anchor=CENTER)
+
+    return entry_file_path, vosk_textbox, whisper_textbox
