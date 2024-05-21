@@ -45,3 +45,4 @@ python main.py
 
 ![resim_2024-05-21_114624617](https://github.com/mre-aydogdu/SpeechToText/assets/72506644/076253f3-bf7d-4045-8511-e3bd518c3a52)
 
+<img width="1622" alt="Ekran Resmi 2024-05-21 11 57 32" src="https://github.com/mre-aydogdu/SpeechToText/assets/72506644/06b407eb-1af1-4308-8140-448cbb96bc9f">
