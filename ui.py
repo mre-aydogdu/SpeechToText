@@ -1,26 +1,45 @@
+import threading
+
 from customtkinter import *
 from customtkinter import CTkEntry
 from PIL import Image
-
-from functions import VoskTranscribe, WhisperTranscribe, UploadAction, ResetPath, Enhance, read_text_file, \
-    UploadAction_Text
+from functions import VoskTranscribe, WhisperTranscribe, UploadAction, ResetPath, Enhance, \
+    UploadAction_Text, play_normal, read_text_file
 
 entry_file_path = None
-original_text_path = ""
+original_text = None
 
 def create_ui(app):
     # Add a text box to show the file name and path
     global entry_file_path
     global original_text_path
+    global original_text
+
     custom_font = CTkFont(family="Montserrat", size=14, weight="bold")
     cross_image = CTkImage(Image.open("Icons/close.png").resize((20, 20), Image.Resampling.LANCZOS))
+    play_image = CTkImage(Image.open("Icons/play_image.png").resize((20, 20), Image.Resampling.LANCZOS))
+
+    def update_original_text():
+        global original_text
+        file_path = original_text_path.get()  # Get the file path from the entry widget
+
+        # Read the content of the selected text file
+        original_text = read_text_file(file_path)
+
+        # Debug print to verify that original_text is properly updated
+        print("Original Text:", original_text)
+
+    play_button = CTkButton(master=app, image=play_image, text="", command=lambda: play_normal(entry_file_path.get()))
+    play_button.place(relx=0.285, rely=0.1, anchor=CENTER, relwidth=0.02)
+
+    play_button2 = CTkButton(master=app, image=play_image, text="", command=lambda: play_normal(enhanced_file_path.get()))
+    play_button2.place(relx=0.285, rely=0.13, anchor=CENTER, relwidth=0.02)
 
     original_text_path = CTkEntry(master=app, width=400, fg_color="#111111", border_width=0, text_color="white",
                                   font=("default", 10), state="normal")
     original_text_path.place(relx=0.5, rely=0.05, anchor=CENTER)
-    original_text = read_text_file(original_text_path.get())
 
-    button_open_origin = CTkButton(master=app, text='Load Text', command=lambda: UploadAction_Text(original_text_path),
+    button_open_origin = CTkButton(master=app, text='Load Text', command=lambda: [UploadAction_Text(original_text_path), update_original_text()],
                                    font=custom_font)
     button_open_origin.place(relx=0.69, rely=0.05, anchor=CENTER, relwidth=0.09)
 
@@ -116,11 +135,6 @@ def create_ui(app):
 
     vosk_similarity_label_enhanced = CTkLabel(master=app, text="Vosk Similarity (Enhanced): N/A", font=custom_font)
     vosk_similarity_label_enhanced.place(relx=0.75, rely=0.95, anchor=CENTER)
+
     return entry_file_path, vosk_textbox, whisper_textbox, enhanced_file_path
 
-
-if __name__ == "__main__":
-    app = CTk()
-    app.geometry("1200x800")  # Set the window size
-    create_ui(app)
-    app.mainloop()

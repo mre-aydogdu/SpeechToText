@@ -6,9 +6,46 @@ import whisper
 from df.enhance import enhance, init_df, load_audio, save_audio
 import subprocess
 from tkinter import END
+from pydub import AudioSegment
+import pygame
 
 model_whisper = whisper.load_model("base")
 model_vosk = "vosk-model-small-tr-0.3"
+
+
+is_playing = False
+
+def play_normal(filename):
+    global is_playing
+
+    # Check if the file is WAV format
+    if not filename.lower().endswith('.wav'):
+        print("Converting audio to WAV format...")
+        # Load the audio file
+        audio = AudioSegment.from_file(filename)
+        # Define the output WAV file path
+        output_wav = os.path.splitext(filename)[0] + '.wav'
+        # Export the audio to WAV format
+        audio.export(output_wav, format='wav')
+        # Update filename to the WAV file
+        filename = output_wav
+
+    if not is_playing:
+        # Initialize Pygame mixer if not already initialized
+        if not pygame.mixer.get_init():
+            pygame.mixer.init()
+
+        # Load the WAV file for playback
+        pygame.mixer.music.load(filename)
+        # Play the audio
+        pygame.mixer.music.play()
+        is_playing = True
+        print("Playing:", filename)
+    else:
+        # Pause the audio if already playing
+        pygame.mixer.music.pause()
+        is_playing = False
+        print("Playback paused")
 
 
 def read_text_file(filename):
@@ -36,7 +73,6 @@ def calculate_similarity(text1, text2):
         common_words = words1 & words2
         similarity = (len(common_words) / max(len(words1), len(words2))) * 100
         return similarity
-
 
 
 def normalize_text(text):
@@ -75,6 +111,7 @@ def VoskTranscribe(entry_file_path, textbox, similarity_label, original_text, la
             textbox.insert("1.0", vosk_text)
             textbox.configure(state="disabled")
             print("Vosk Transcription Result:", vosk_text)
+            print("original text:", original_text)
 
             print("Before similarity calculation")  # Debug print
             similarity_percentage = calculate_similarity(original_text,
@@ -188,7 +225,6 @@ def UploadAction(entry_file_path, event=None):
 
 
 def UploadAction_Text(entry_file_path, event=None):
-
     filename = filedialog.askopenfilename(
         filetypes=[("Text files", "*.txt"), ("All files", "*.*")])
     entry_file_path.configure(state="normal")
@@ -197,13 +233,6 @@ def UploadAction_Text(entry_file_path, event=None):
     entry_file_path.configure(state="readonly")
 
     print(f'Selected: {filename}')
-
-    # Read the text file and store its content
-    original_text = read_text_file(filename)
-    if original_text:
-        print(f'Original text loaded: {original_text[:100]}...')  # Display the first 100 characters as a preview
-    else:
-        print('Failed to load the original text.')
 
 
 def ResetPath(entry_file_path, enhanced_file_path, original_text_path, reset_type):
